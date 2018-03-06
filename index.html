@@ -22,15 +22,15 @@
 
     <script>
 
-
-          var chart = renderChart()
-                .svgHeight(window.innerHeight-30)
-                .svgWidth(window.innerWidth-30)
+        d3.csv("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json", function (data) {
+            var chart = renderChart()
+                .svgHeight(window.innerHeight - 30)
+                .svgWidth(window.innerWidth - 30)
                 .container('#myGraph')
-                .data('Pass Something Here and use it as attrs.data')
+                .data(data)
                 .debug(true)
-                .run()
-
+                .run();
+        });
 
     </script>
 

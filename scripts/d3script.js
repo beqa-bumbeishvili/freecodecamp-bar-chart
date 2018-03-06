@@ -31,7 +31,7 @@ function renderChart(params) {
   //Main chart object
   var main = function (selection) {
     selection.each(function scope() {
-
+      
       //Calculated properties
       var calc = {}
       calc.id = "ID" + Math.floor(Math.random() * 1000000);  // id for event handlings
