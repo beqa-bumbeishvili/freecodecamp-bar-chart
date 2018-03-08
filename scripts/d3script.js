@@ -30,7 +30,7 @@ function renderChart(params) {
   //Main chart object
   var main = function (selection) {
     selection.each(function scope() {
-      
+
       //Calculated properties
       var calc = {}
       calc.id = "ID" + Math.floor(Math.random() * 1000000);  // id for event handlings
@@ -38,6 +38,19 @@ function renderChart(params) {
       calc.chartTopMargin = attrs.marginTop;
       calc.chartWidth = attrs.svgWidth - attrs.marginRight - calc.chartLeftMargin;
       calc.chartHeight = attrs.svgHeight - attrs.marginBottom - calc.chartTopMargin;
+
+      //#########################  SCALES  ########################
+      var scales = {};
+
+      //x axis scale
+      scales.x = d3.scaleLinear()
+        .range([0, calc.chartWidth])
+        .domain([minYear(), maxYear()]);
+
+      //y axis scale  
+      scales.y = d3.scaleLinear()
+        .range([calc.chartHeight, 0])
+        .domain([0, dataMaxValue()]);
 
       //Drawing containers
       var container = d3.select(this);
@@ -51,6 +64,26 @@ function renderChart(params) {
       //Add container g element
       var chart = svg.patternify({ tag: 'g', selector: 'chart' })
         .attr('transform', 'translate(' + (calc.chartLeftMargin) + ',' + calc.chartTopMargin + ')');
+
+      //################### FUNCTIONS ####################
+
+      function minYear() {
+        return new Date(attrs.data.data[0]['0']);
+      }
+
+      function maxYear() {
+        var length = attrs.data.data.length;
+        return new Date(attrs.data.data[length - 1]['0']);
+      }
+
+      function dataMaxValue() {
+        var maxValue = attrs.data.data[0]['1'];
+        attrs.data.data.forEach(element => {
+          if (element['1'] > maxValue)
+            maxValue = element['1'];
+        });
+        return maxValue;
+      }
 
       // Smoothly handle data updating
       updateData = function () {
@@ -91,13 +124,13 @@ function renderChart(params) {
 
     // Pattern in action
     var selection = container.selectAll('.' + selector).data(data, (d, i) => {
-            if (typeof d === "object") {
-                if (d.id) {
-                    return d.id;
-                }
-            }
-            return i;
-        })
+      if (typeof d === "object") {
+        if (d.id) {
+          return d.id;
+        }
+      }
+      return i;
+    })
     selection.exit().remove();
     selection = selection.enter().append(elementTag).merge(selection)
     selection.attr('class', selector);
