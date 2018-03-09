@@ -52,6 +52,15 @@ function renderChart(params) {
         .range([calc.chartHeight, 0])
         .domain([0, dataMaxValue()]);
 
+      //###########################  AXES  ########################
+      var axes = {};
+
+      //y axis to show percents
+      axes.y = d3.axisLeft(scales.y);
+
+      //x axis for years  
+      axes.x = d3.axisBottom(scales.x);
+
       //Drawing containers
       var container = d3.select(this);
 
