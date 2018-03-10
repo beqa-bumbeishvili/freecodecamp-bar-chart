@@ -23,7 +23,6 @@ function renderChart(params) {
     data: null
   };
 
-
   //InnerFunctions which will update visuals
   var updateData;
 
