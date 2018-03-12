@@ -29,7 +29,7 @@ function renderChart(params) {
   //Main chart object
   var main = function (selection) {
     selection.each(function scope() {
-
+      
       //Calculated properties
       var calc = {}
       calc.id = "ID" + Math.floor(Math.random() * 1000000);  // id for event handlings
@@ -98,6 +98,25 @@ function renderChart(params) {
 
       }
       //#########################################  UTIL FUNCS ##################################
+
+      function handleWindowResize() {
+        d3.select(window).on('resize.' + attrs.id, function () {
+          setDimensions();
+        });
+      }
+
+      function setDimensions() {
+        setSvgWidthAndHeight();
+        container.call(main);
+      }
+
+      function setSvgWidthAndHeight() {
+        var containerRect = container.node().getBoundingClientRect();
+        if (containerRect.width > 0)
+          attrs.svgWidth = containerRect.width;
+        if (containerRect.height > 0)
+          attrs.svgHeight = containerRect.height;
+      }
 
       function debug() {
         if (attrs.isDebug) {
