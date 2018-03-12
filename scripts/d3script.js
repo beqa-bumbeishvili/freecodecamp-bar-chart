@@ -29,7 +29,7 @@ function renderChart(params) {
   //Main chart object
   var main = function (selection) {
     selection.each(function scope() {
-      
+
       //Calculated properties
       var calc = {}
       calc.id = "ID" + Math.floor(Math.random() * 1000000);  // id for event handlings
@@ -73,6 +73,19 @@ function renderChart(params) {
       var chart = svg.patternify({ tag: 'g', selector: 'chart' })
         .attr('transform', 'translate(' + (calc.chartLeftMargin) + ',' + calc.chartTopMargin + ')');
 
+      //container for y axis
+      var yAxisContainer = chart.patternify({ tag: 'g', selector: 'y-axis-container' });
+
+      //display y axis
+      yAxisContainer.call(axes.y);
+
+      //container for y axis
+      var xAxisContainer = chart.patternify({ tag: 'g', selector: 'x-axis-container' })
+        .attr('transform', 'translate(0,' + axisYPosition() + ')');
+
+      //display y axis
+      xAxisContainer.call(axes.x);
+
       //################### FUNCTIONS ####################
 
       function minYear() {
@@ -91,6 +104,12 @@ function renderChart(params) {
             maxValue = element['1'];
         });
         return maxValue;
+      }
+
+      function axisYPosition(){
+        var firstElemTransform = d3.select(".y-axis-container g:nth-child(2)").attr('transform');
+        var yValue = firstElemTransform.substring(firstElemTransform.indexOf("(") + 1, firstElemTransform.indexOf(")")).split(",")[1];
+        return yValue;
       }
 
       // Smoothly handle data updating
