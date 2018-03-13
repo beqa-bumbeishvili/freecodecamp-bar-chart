@@ -20,6 +20,7 @@ function renderChart(params) {
     container: 'body',
     defaultTextFill: '#2C3E50',
     defaultFont: 'Helvetica',
+    barColor: '#4286b4',
     data: null
   };
 
@@ -37,6 +38,7 @@ function renderChart(params) {
       calc.chartTopMargin = attrs.marginTop;
       calc.chartWidth = attrs.svgWidth - attrs.marginRight - calc.chartLeftMargin;
       calc.chartHeight = attrs.svgHeight - attrs.marginBottom - calc.chartTopMargin;
+      calc.barWidth = calc.chartWidth / (attrs.data.data.length * 2);
 
       //#########################  SCALES  ########################
       var scales = {};
@@ -48,7 +50,7 @@ function renderChart(params) {
 
       //y axis scale  
       scales.y = d3.scaleLinear()
-        .range([calc.chartHeight, 0])
+        .range([0, calc.chartHeight])
         .domain([0, dataMaxValue()]);
 
       //###########################  AXES  ########################
@@ -86,6 +88,20 @@ function renderChart(params) {
       //display y axis
       xAxisContainer.call(axes.x);
 
+      //create container for grouping bar rectangles
+      var barsContainer = chart.patternify({ tag: 'g', selector: 'bars-container' });
+
+      //display bars
+      var bars = barsContainer
+        .patternify({ tag: 'rect', selector: 'bar', data: attrs.data.data })
+        .attr('height', function (d, i) {
+          return scales.y(d['1']);
+        })
+        .attr('width', calc.barWidth)
+        .attr('x', (d, i) => i * calc.barWidth * 2)
+        .attr('y', (d) => calc.chartHeight - scales.y(d['1']))
+        .attr('fill', attrs.barColor);
+
       //################### FUNCTIONS ####################
 
       function minYear() {
@@ -106,8 +122,8 @@ function renderChart(params) {
         return maxValue;
       }
 
-      function axisYPosition(){
-        var firstElemTransform = d3.select(".y-axis-container g:nth-child(2)").attr('transform');
+      function axisYPosition() {
+        var firstElemTransform = d3.select(".y-axis-container g:last-child").attr('transform');
         var yValue = firstElemTransform.substring(firstElemTransform.indexOf("(") + 1, firstElemTransform.indexOf(")")).split(",")[1];
         return yValue;
       }
