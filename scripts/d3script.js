@@ -38,19 +38,21 @@ function renderChart(params) {
       calc.chartTopMargin = attrs.marginTop;
       calc.chartWidth = attrs.svgWidth - attrs.marginRight - calc.chartLeftMargin;
       calc.chartHeight = attrs.svgHeight - attrs.marginBottom - calc.chartTopMargin;
-      calc.barWidth = calc.chartWidth / (attrs.data.data.length * 2);
+      calc.distance = calc.chartWidth / 20;
+      calc.barWidth = (calc.chartWidth - calc.distance * 2) / (attrs.data.data.length * 2);
+      calc.barsHorizontalSpacing = 2;
 
       //#########################  SCALES  ########################
       var scales = {};
 
       //x axis scale
       scales.x = d3.scaleLinear()
-        .range([0, calc.chartWidth])
+        .range([0, calc.chartWidth - calc.distance * 2])
         .domain([minYear(), maxYear()]);
 
       //y axis scale  
       scales.y = d3.scaleLinear()
-        .range([0, calc.chartHeight])
+        .range([0, calc.chartHeight - calc.distance * 2])
         .domain([0, dataMaxValue()]);
 
       //###########################  AXES  ########################
@@ -76,14 +78,15 @@ function renderChart(params) {
         .attr('transform', 'translate(' + (calc.chartLeftMargin) + ',' + calc.chartTopMargin + ')');
 
       //container for y axis
-      var yAxisContainer = chart.patternify({ tag: 'g', selector: 'y-axis-container' });
+      var yAxisContainer = chart.patternify({ tag: 'g', selector: 'y-axis-container' })
+        .attr('transform', 'translate(' + calc.distance + ',' + calc.distance + ')');
 
       //display y axis
       yAxisContainer.call(axes.y);
-
+      
       //container for y axis
       var xAxisContainer = chart.patternify({ tag: 'g', selector: 'x-axis-container' })
-        .attr('transform', 'translate(0,' + axisYPosition() + ')');
+        .attr('transform', 'translate(' + calc.distance + ',' + (calc.distance + axisYPosition()) + ')');
 
       //display y axis
       xAxisContainer.call(axes.x);
@@ -94,17 +97,16 @@ function renderChart(params) {
       //display bars
       var bars = barsContainer
         .patternify({ tag: 'rect', selector: 'bar', data: attrs.data.data })
-        .attr('x', (d, i) => i * calc.barWidth * 2)
-        .attr('y', calc.chartHeight)
+        .attr('x', (d, i) => calc.distance + calc.barsHorizontalSpacing + (i * calc.barWidth * 2))
+        .attr('y', (d) => calc.chartHeight - calc.distance)
         .attr('height', 0)
         .attr('width', calc.barWidth)
         .transition().duration(2000)
-        .attr('y', (d) => calc.chartHeight - scales.y(d['1']))
+        .attr('y', (d) => calc.chartHeight - scales.y(d['1']) - calc.distance)
         .attr('height', function (d, i) {
           return scales.y(d['1']);
         })
         .attr('fill', attrs.barColor);
-
 
       //################### FUNCTIONS ####################
 
@@ -129,7 +131,7 @@ function renderChart(params) {
       function axisYPosition() {
         var firstElemTransform = d3.select(".y-axis-container g:last-child").attr('transform');
         var yValue = firstElemTransform.substring(firstElemTransform.indexOf("(") + 1, firstElemTransform.indexOf(")")).split(",")[1];
-        return yValue;
+        return parseFloat(yValue);
       }
 
       // Smoothly handle data updating
