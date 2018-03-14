@@ -94,13 +94,17 @@ function renderChart(params) {
       //display bars
       var bars = barsContainer
         .patternify({ tag: 'rect', selector: 'bar', data: attrs.data.data })
+        .attr('x', (d, i) => i * calc.barWidth * 2)
+        .attr('y', calc.chartHeight)
+        .attr('height', 0)
+        .attr('width', calc.barWidth)
+        .transition().duration(2000)
+        .attr('y', (d) => calc.chartHeight - scales.y(d['1']))
         .attr('height', function (d, i) {
           return scales.y(d['1']);
         })
-        .attr('width', calc.barWidth)
-        .attr('x', (d, i) => i * calc.barWidth * 2)
-        .attr('y', (d) => calc.chartHeight - scales.y(d['1']))
         .attr('fill', attrs.barColor);
+
 
       //################### FUNCTIONS ####################
 
