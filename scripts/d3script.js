@@ -128,6 +128,7 @@ function renderChart(params) {
         return maxValue;
       }
 
+      //get y axis bottom part coordinate
       function axisYPosition() {
         var firstElemTransform = d3.select(".y-axis-container g:last-child").attr('transform');
         var yValue = firstElemTransform.substring(firstElemTransform.indexOf("(") + 1, firstElemTransform.indexOf(")")).split(",")[1];
