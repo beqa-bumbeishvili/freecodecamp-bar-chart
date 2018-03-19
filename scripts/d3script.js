@@ -59,7 +59,7 @@ function renderChart(params) {
       var axes = {};
 
       //y axis to show percents
-      axes.y = d3.axisLeft(scales.y);
+      axes.y = d3.axisLeft(scales.y).ticks(20, 's');
 
       //x axis for years  
       axes.x = d3.axisBottom(scales.x);
