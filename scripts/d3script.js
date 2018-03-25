@@ -31,6 +31,8 @@ function renderChart(params) {
   var main = function (selection) {
     selection.each(function scope() {
 
+      getArithmeticMean();
+
       //Calculated properties
       var calc = {}
       calc.id = "ID" + Math.floor(Math.random() * 1000000);  // id for event handlings
@@ -83,7 +85,7 @@ function renderChart(params) {
 
       //display y axis
       yAxisContainer.call(axes.y);
-      
+
       //container for y axis
       var xAxisContainer = chart.patternify({ tag: 'g', selector: 'x-axis-container' })
         .attr('transform', 'translate(' + calc.distance + ',' + (calc.distance + axisYPosition()) + ')');
@@ -133,6 +135,16 @@ function renderChart(params) {
         var firstElemTransform = d3.select(".y-axis-container g:last-child").attr('transform');
         var yValue = firstElemTransform.substring(firstElemTransform.indexOf("(") + 1, firstElemTransform.indexOf(")")).split(",")[1];
         return parseFloat(yValue);
+      }
+
+      //get arithmetic mean of data
+      function getArithmeticMean() {
+        var numbers = attrs.data.data.map(x => x['1'])
+        var numbersSum = 0;
+        numbers.forEach(element => {
+          numbersSum += element;
+        });
+        return numbersSum/numbers.length;
       }
 
       // Smoothly handle data updating
