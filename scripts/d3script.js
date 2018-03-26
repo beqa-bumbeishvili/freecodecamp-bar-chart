@@ -55,7 +55,7 @@ function renderChart(params) {
       //y axis scale  
       scales.y = d3.scaleLinear()
         .range([0, calc.chartHeight - calc.distance * 2])
-        .domain([0, dataMaxValue()]);
+        .domain([dataMaxValue(), 0]);
 
       //###########################  AXES  ########################
       var axes = {};
@@ -99,15 +99,15 @@ function renderChart(params) {
       //display bars
       var bars = barsContainer
         .patternify({ tag: 'rect', selector: 'bar', data: attrs.data.data })
-        .attr('x', (d, i) => calc.distance + calc.barsHorizontalSpacing + (i * calc.barWidth * 2))
+        .attr('x', function (d,i) {
+          return calc.distance + calc.barsHorizontalSpacing + (i * calc.barWidth * 2);
+        })
         .attr('y', (d) => calc.chartHeight - calc.distance)
         .attr('height', 0)
         .attr('width', calc.barWidth)
         .transition().duration(2000)
-        .attr('y', (d) => calc.chartHeight - scales.y(d['1']) - calc.distance)
-        .attr('height', function (d, i) {
-          return scales.y(d['1']);
-        })
+        .attr('y', (d) => scales.y(d['1']) + calc.distance)
+        .attr('height', (d) => calc.chartHeight - scales.y(d['1']) - calc.distance*2)
         .attr('fill', attrs.barColor);
 
       //################### FUNCTIONS ####################
@@ -144,7 +144,7 @@ function renderChart(params) {
         numbers.forEach(element => {
           numbersSum += element;
         });
-        return numbersSum/numbers.length;
+        return numbersSum / numbers.length;
       }
 
       // Smoothly handle data updating
