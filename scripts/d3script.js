@@ -21,6 +21,8 @@ function renderChart(params) {
     defaultTextFill: '#2C3E50',
     defaultFont: 'Helvetica',
     barColor: '#4286b4',
+    arithmeticMeanHeight: 2,
+    arithmeticMeanColor: 'red',
     data: null
   };
 
@@ -30,8 +32,6 @@ function renderChart(params) {
   //Main chart object
   var main = function (selection) {
     selection.each(function scope() {
-
-      getArithmeticMean();
 
       //Calculated properties
       var calc = {}
@@ -99,7 +99,7 @@ function renderChart(params) {
       //display bars
       var bars = barsContainer
         .patternify({ tag: 'rect', selector: 'bar', data: attrs.data.data })
-        .attr('x', function (d,i) {
+        .attr('x', function (d, i) {
           return calc.distance + calc.barsHorizontalSpacing + (i * calc.barWidth * 2);
         })
         .attr('y', (d) => calc.chartHeight - calc.distance)
@@ -107,8 +107,19 @@ function renderChart(params) {
         .attr('width', calc.barWidth)
         .transition().duration(2000)
         .attr('y', (d) => scales.y(d['1']) + calc.distance)
-        .attr('height', (d) => calc.chartHeight - scales.y(d['1']) - calc.distance*2)
+        .attr('height', (d) => calc.chartHeight - scales.y(d['1']) - calc.distance * 2)
         .attr('fill', attrs.barColor);
+
+      //create container for arithetic mean line
+      var lineContainer = chart.patternify({ tag: 'g', selector: 'line-container' });
+      //display arithmetic mean
+      var arithmeticMean = lineContainer
+        .patternify({ tag: 'rect', selector: 'arithmetic-mean-line' })
+        .attr('x', calc.distance + calc.barsHorizontalSpacing + (10 * calc.barWidth))
+        .attr('y', scales.y(getArithmeticMean()))
+        .attr('height', attrs.arithmeticMeanHeight)
+        .attr('width', (attrs.data.data.length - 11) * calc.barWidth * 2)
+        .attr('fill', attrs.arithmeticMeanColor);
 
       //################### FUNCTIONS ####################
 
