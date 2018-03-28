@@ -102,21 +102,29 @@ function renderChart(params) {
         .attr('x', function (d, i) {
           return calc.distance + calc.barsHorizontalSpacing + (i * calc.barWidth * 2);
         })
-        .attr('y', (d) => calc.chartHeight - calc.distance)
+        .attr('y', function (d, i) {
+          return calc.chartHeight - calc.distance;
+        })
         .attr('height', 0)
         .attr('width', calc.barWidth)
         .transition().duration(2000)
-        .attr('y', (d) => scales.y(d['1']) + calc.distance)
+        .attr('y', function (d, i) {
+          return scales.y(d['1']) + calc.distance;
+        })
+        .attr('data', function (d, i) {
+          return d['1'];
+        })
         .attr('height', (d) => calc.chartHeight - scales.y(d['1']) - calc.distance * 2)
         .attr('fill', attrs.barColor);
 
       //create container for arithetic mean line
       var lineContainer = chart.patternify({ tag: 'g', selector: 'line-container' });
+
       //display arithmetic mean
       var arithmeticMean = lineContainer
         .patternify({ tag: 'rect', selector: 'arithmetic-mean-line' })
         .attr('x', calc.distance + calc.barsHorizontalSpacing + (10 * calc.barWidth))
-        .attr('y', scales.y(getArithmeticMean()))
+        .attr('y', scales.y(getArithmeticMean()) + calc.distance)
         .attr('height', attrs.arithmeticMeanHeight)
         .attr('width', (attrs.data.data.length - 11) * calc.barWidth * 2)
         .attr('fill', attrs.arithmeticMeanColor);
