@@ -73,6 +73,7 @@ function renderChart(params) {
       var svg = container.patternify({ tag: 'svg', selector: 'svg-chart-container' })
         .attr('width', attrs.svgWidth)
         .attr('height', attrs.svgHeight)
+        .attr('id', 'title')
         .attr('font-family', attrs.defaultFont);
 
       //Add container g element
@@ -81,14 +82,16 @@ function renderChart(params) {
 
       //container for y axis
       var yAxisContainer = chart.patternify({ tag: 'g', selector: 'y-axis-container' })
-        .attr('transform', 'translate(' + calc.distance + ',' + calc.distance + ')');
+        .attr('transform', 'translate(' + calc.distance + ',' + calc.distance + ')')
+        .attr('id', 'y-axis');
 
       //display y axis
       yAxisContainer.call(axes.y);
 
       //container for y axis
       var xAxisContainer = chart.patternify({ tag: 'g', selector: 'x-axis-container' })
-        .attr('transform', 'translate(' + calc.distance + ',' + (calc.distance + axisYPosition()) + ')');
+        .attr('transform', 'translate(' + calc.distance + ',' + (calc.distance + axisYPosition()) + ')')
+        .attr('id', 'x-axis');;
 
       //display y axis
       xAxisContainer.call(axes.x);
@@ -111,11 +114,10 @@ function renderChart(params) {
         .attr('y', function (d, i) {
           return scales.y(d['1']) + calc.distance;
         })
-        .attr('data', function (d, i) {
-          return d['1'];
-        })
         .attr('height', (d) => calc.chartHeight - scales.y(d['1']) - calc.distance * 2)
-        .attr('fill', attrs.barColor);
+        .attr('fill', attrs.barColor)
+        .attr('data-date', (d) => d['0'])
+        .attr('data-gdp', (d) => d['1']);
 
       //create container for arithetic mean line
       var lineContainer = chart.patternify({ tag: 'g', selector: 'line-container' });
