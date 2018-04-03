@@ -22,7 +22,7 @@ function renderChart(params) {
     defaultFont: 'Helvetica',
     barColor: '#4286b4',
     arithmeticMeanHeight: 2,
-    arithmeticMeanColor: 'red',
+    arithmeticMeanColor: 'purple',
     arithmeticMeanButton: { x: 20, y: 20, height: 30, width: 40, color: 'red' },
     data: null
   };
