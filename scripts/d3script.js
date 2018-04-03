@@ -23,6 +23,7 @@ function renderChart(params) {
     barColor: '#4286b4',
     arithmeticMeanHeight: 2,
     arithmeticMeanColor: 'red',
+    arithmeticMeanButton: { x: 20, y: 20, height: 30, width: 40, color: 'red' },
     data: null
   };
 
@@ -133,6 +134,21 @@ function renderChart(params) {
         .attr('height', attrs.arithmeticMeanHeight)
         .attr('width', (attrs.data.data.length - 11) * calc.barWidth * 2)
         .attr('fill', attrs.arithmeticMeanColor);
+
+      //container for svg upper utilities
+      var chartPropertiesContainer = svg.patternify({ tag: 'g', selector: 'chart-properties-container' });
+
+      //container for button  
+      var arithmeticButtonContainer = chartPropertiesContainer.patternify({ tag: 'g', selector: 'arithmetic-button-container' });
+
+      //button to control display on/off aithmetic line
+      var arithmeticButton = arithmeticButtonContainer
+        .patternify({ tag: 'rect', selector: 'arithmetic-mean-button' })
+        .attr('x', attrs.arithmeticMeanButton.x)
+        .attr('y', attrs.arithmeticMeanButton.y)
+        .attr('height', attrs.arithmeticMeanButton.height)
+        .attr('width', attrs.arithmeticMeanButton.width)
+        .attr('fill', attrs.arithmeticMeanButton.color);
 
       //################### FUNCTIONS ####################
 
