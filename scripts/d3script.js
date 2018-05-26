@@ -92,12 +92,12 @@ function renderChart(params) {
       //display y axis
       yAxisContainer.call(axes.y);
 
-      //container for y axis
+      //container for x axis
       var xAxisContainer = chart.patternify({ tag: 'g', selector: 'x-axis-container' })
         .attr('transform', 'translate(' + calc.distance + ',' + (calc.distance + axisYPosition()) + ')')
         .attr('id', 'x-axis');
 
-      //display y axis
+      //display x axis
       xAxisContainer.call(axes.x);
 
       //create container for grouping bar rectangles
